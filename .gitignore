@@ -1,0 +1,7 @@
+/build
+/.cache
+/.clang-format
+/compile_commands.json
+/cmake-kits.json
+*.swp
+.DS_Store
