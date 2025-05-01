@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 4.0)
-project(inspect VERSION 0.2.0 DESCRIPTION "Look at files" LANGUAGES C)
+project(inspect VERSION 0.4.0 DESCRIPTION "Look at files" LANGUAGES C)
 find_package(Curses REQUIRED)
 add_executable(inspect
     "src/main.c"
