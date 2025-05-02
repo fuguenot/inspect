@@ -1,1 +1,11 @@
-HELP
+inspect: simple tool for looking at files
+----------------------------------------------------------------
+KEYBINDS:
+ h,j,k,l Left/down/up/right
+ ^D,^U   Half page down/up
+ ^F,^B   Page down/up
+ ?       Open this help buffer
+ Q       Quit inspect
+ q       Close buffer
+ 0-9     Go to the nth buffer
+ ,     Go to the next open buffer on the left/right

@@ -27,7 +27,24 @@ int handle_events() {
     int c = getch();
     redraw_bar_needed = TRUE;
     switch (c) {
-    case 'q': running = FALSE; break;
+    case 'Q': running = FALSE; break;
+    case 'q':
+        close_buffer(buf_idx);
+        for (int i = buf_idx - 1; i >= 0; i--)
+            if (buffers[i] != NULL) {
+                buf_idx = i;
+                redraw_display_needed = TRUE;
+                break;
+            }
+        if (buffers[buf_idx] == NULL)
+            for (int i = buf_idx + 1; i < NBUFS; i++)
+                if (buffers[i] != NULL) {
+                    buf_idx = i;
+                    redraw_display_needed = TRUE;
+                    break;
+                }
+        if (buffers[buf_idx] == NULL) running = FALSE;
+        break;
     case '?':
         buf_idx = open_buffer("inspect-help");
         if (buf_idx < 0) return buf_idx;

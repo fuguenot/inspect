@@ -1,5 +1,6 @@
 #include "inspect.h"
 
+#include <locale.h>
 #include <stdlib.h>
 
 #include <ncurses.h>
@@ -9,8 +10,10 @@ WINDOW *bar;
 
 #define BAR_PAIR 1
 #define SEL_PAIR 2
+#define FILE_PAIR 3
 
 void init() {
+    setlocale(LC_ALL, "");
     initscr();
     cbreak();
     noecho();
@@ -20,6 +23,7 @@ void init() {
     if (has_colors() == TRUE) start_color();
     init_pair(BAR_PAIR, COLOR_WHITE, COLOR_BLACK);
     init_pair(SEL_PAIR, COLOR_GREEN, COLOR_BLACK);
+    init_pair(FILE_PAIR, COLOR_BLUE, COLOR_BLACK);
 
     getmaxyx(stdscr, rows, cols);
 
@@ -67,7 +71,10 @@ void redraw_bar() {
         waddch(bar, ' ');
     }
     wattroff(bar, A_BOLD | COLOR_PAIR(BAR_PAIR));
-    mvwprintw(bar, 1, 0, "%s | %d:%d", buffers[buf_idx]->filename, row, col);
+    wattron(bar, A_BOLD | COLOR_PAIR(FILE_PAIR));
+    mvwprintw(bar, 1, 0, buffers[buf_idx]->filename);
+    wattroff(bar, A_BOLD | COLOR_PAIR(FILE_PAIR));
+    wprintw(bar, " | %d:%d", row, col);
     mvwaddstr(bar, 2, 0, "inspect v0.4.0 | ? for keybinds");
     wrefresh(bar);
 }
