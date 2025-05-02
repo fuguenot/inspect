@@ -81,6 +81,24 @@ int handle_events() {
         if (buffers[9] != NULL) buf_idx = 9;
         redraw_display_needed = TRUE;
         break;
+    case KEY_LEFT:
+        for (int i = buf_idx - 1; i >= 0; i--) {
+            if (buffers[i] != NULL) {
+                buf_idx = i;
+                redraw_display_needed = TRUE;
+                break;
+            }
+        }
+        break;
+    case KEY_RIGHT:
+        for (int i = buf_idx + 1; i < NBUFS; i++) {
+            if (buffers[i] != NULL) {
+                buf_idx = i;
+                redraw_display_needed = TRUE;
+                break;
+            }
+        }
+        break;
     default: break;
     }
     return 0;
