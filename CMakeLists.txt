@@ -4,6 +4,6 @@ find_package(Curses REQUIRED)
 add_executable(inspect
     "src/main.c" "src/inspect.h"
     "src/args.c" "src/render.c"
-    "src/input.c"
+    "src/input.c" "src/buffer.c"
 )
 target_link_libraries(inspect PRIVATE ${CURSES_LIBRARIES})

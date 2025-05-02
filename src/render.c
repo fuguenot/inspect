@@ -31,14 +31,7 @@ void init() {
 }
 
 void cleanup() {
-    for (int i = 0; i < clines; i++)
-        free(lines[i]);
-    free(lines);
-    wborder(display, ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ');
-    wrefresh(display);
     delwin(display);
-    wborder(bar, ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ');
-    wrefresh(bar);
     delwin(bar);
     endwin();
 }
@@ -47,15 +40,18 @@ void redraw_display() {
     wclear(display);
     wrefresh(display);
     for (int i = 0; i < rows; i++)
-        if (i + drow < clines) mvwaddstr(display, i, 0, lines[i + drow]);
+        if (i + drow < buffers[buf_idx]->clines)
+            mvwaddstr(display, i, 0, buffers[buf_idx]->lines[i + drow]);
     wrefresh(display);
 }
 
 void redraw_bar() {
     wclear(bar);
     wrefresh(bar);
-    mvwprintw(bar, 0, 0, "%s | %d:%d", file, row, col);
-    mvwaddstr(bar, 1, 0, "inspect v0.4.0 | ? for keybinds");
+    for (int i = 0; i < cols; i++)
+        mvwaddch(bar, 0, i, '-');
+    mvwprintw(bar, 1, 0, "%s | %d:%d", buffers[buf_idx]->filename, row, col);
+    mvwaddstr(bar, 2, 0, "inspect v0.4.0 | ? for keybinds");
     wrefresh(bar);
 }
 
