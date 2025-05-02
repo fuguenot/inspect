@@ -3,7 +3,8 @@
 const char *prog_name;
 
 const char *file;
-char *buf;
+char **lines;
+int64_t clines;
 
 int rows, cols;
 

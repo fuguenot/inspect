@@ -4,7 +4,8 @@
 
 extern const char *prog_name;
 extern const char *file;
-extern char *buf;
+extern char **lines;
+extern int64_t clines;
 
 extern int rows, cols;
 

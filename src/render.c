@@ -1,5 +1,7 @@
 #include "inspect.h"
 
+#include <stdlib.h>
+
 #include <ncurses.h>
 
 WINDOW *display;
@@ -19,7 +21,7 @@ void init() {
     running = TRUE;
     redraw_display_needed = FALSE;
     redraw_bar_needed = FALSE;
-drow = 0;
+    drow = 0;
     dcol = 0;
     row = 0;
     col = 0;
@@ -28,6 +30,9 @@ drow = 0;
 }
 
 void cleanup() {
+    for (int i = 0; i < clines; i++)
+        free(lines[i]);
+    free(lines);
     wborder(display, ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ');
     wrefresh(display);
     delwin(display);
@@ -40,8 +45,8 @@ void cleanup() {
 void redraw_display() {
     wclear(display);
     wrefresh(display);
-    wborder(display, '|', '|', '-', '-', '+', '+', '+', '+');
-    wprintw(display, "asdfkjhabsfkhbsdf");
+    for (int i = 0; i < rows; i++)
+        if (i + drow < clines) mvwprintw(display, i, 0, "%s", lines[i + drow]);
     wrefresh(display);
 }
 

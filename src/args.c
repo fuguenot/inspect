@@ -1,6 +1,7 @@
 #include "inspect.h"
 
 #include <stdlib.h>
+#include <string.h>
 #include <sys/stat.h>
 #include <unistd.h>
 
@@ -59,7 +60,7 @@ void load_file() {
         exit(1);
     }
     int64_t size = fbuf.st_size;
-    buf = calloc(size + 1, sizeof(char));
+    char *buf = calloc(size + 1, sizeof(char));
     if (buf == NULL) {
         perror(prog_name);
         fprintf(stderr,
@@ -78,4 +79,20 @@ void load_file() {
     }
     fclose(fp);
     buf[size] = '\0';
+    clines = 1;
+    for (int64_t i = 0; i < size; i++)
+        if (buf[i] == '\n') clines++;
+    lines = calloc(clines, sizeof(char *));
+    char *ptr = NULL;
+    char *start = buf;
+    int64_t line_size;
+    for (int64_t i = 0; i < clines; i++) {
+        ptr = strstr(start, "\n");
+        line_size = ptr == NULL ? size - (start - buf) : ptr - start;
+        lines[i] = calloc(line_size + 1, sizeof(char));
+        strlcpy(lines[i], start, line_size + 1);
+        if (ptr == NULL) break;
+        start += line_size + 1;
+    }
+    free(buf);
 }
