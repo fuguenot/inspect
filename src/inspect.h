@@ -31,7 +31,7 @@ extern int drow, dcol, row, col;
 
 void usage(FILE *out);
 void help();
-char *process_args(int argc, char *const *argv);
+int process_args(int argc, char *const *argv);
 
 int open_buffer(const char *name);
 void close_buffer(int idx);
