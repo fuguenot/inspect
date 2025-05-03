@@ -23,10 +23,9 @@ With that aside...
 ## Installation
 Windows support is not planned for the future by me (@fuguenot), but any PRs are welcome.
 
-Clone the repository, then run `./install.sh`:
+Run `./install.sh`:
 ```sh
-git clone https://github.com/fuguenot/inspect.git
-./install.sh
+curl "https://raw.githubusercontent.com/fuguenot/inspect/main/install.sh" > install.sh && sh install.sh
 ```
 Once you reload your shell, `i` should be available as a command.
 
