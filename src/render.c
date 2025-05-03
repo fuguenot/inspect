@@ -10,35 +10,33 @@ WINDOW *bar;
 
 #define BAR_SPACE 3
 
-#define BAR_PAIR 1
-#define SEL_PAIR 2
+#define BAR_PAIR  1
+#define SEL_PAIR  2
 #define FILE_PAIR 3
 
-void init() {
+void init_ui() {
     setlocale(LC_ALL, "");
     initscr();
     cbreak();
     noecho();
     nonl();
-    keypad(stdscr, TRUE);
+    keypad(stdscr, true);
 
-    if (has_colors() == TRUE) start_color();
-    init_pair(BAR_PAIR, COLOR_WHITE, COLOR_BLACK);
-    init_pair(SEL_PAIR, COLOR_GREEN, COLOR_BLACK);
-    init_pair(FILE_PAIR, COLOR_BLUE, COLOR_BLACK);
+    if (has_colors()) {
+        start_color();
+        init_pair(BAR_PAIR, COLOR_WHITE, COLOR_BLACK);
+        init_pair(SEL_PAIR, COLOR_GREEN, COLOR_BLACK);
+        init_pair(FILE_PAIR, COLOR_BLUE, COLOR_BLACK);
+    }
 
     getmaxyx(stdscr, rows, cols);
 
     display = newwin(rows - BAR_SPACE, cols, 0, 0);
     bar = newwin(BAR_SPACE, cols, rows - BAR_SPACE, 0);
 
-    running = TRUE;
-    redraw_display_needed = FALSE;
-    redraw_bar_needed = FALSE;
-    drow = 0;
-    dcol = 0;
-    row = 0;
-    col = 0;
+    running = true;
+    redraw_display_needed = false;
+    redraw_bar_needed = false;
 
     refresh();
 }
@@ -53,8 +51,11 @@ void redraw_display() {
     wclear(display);
     wrefresh(display);
     for (int i = 0; i < rows; i++)
-        if (i + drow < buffers[buf_idx]->clines)
-            mvwaddstr(display, i, 0, buffers[buf_idx]->lines[i + drow]);
+        if (i + bufs[buf_idx]->drow < bufs[buf_idx]->nlines)
+            mvwaddstr(display,
+                      i,
+                      0,
+                      bufs[buf_idx]->lines[i + bufs[buf_idx]->drow]);
     wrefresh(display);
 }
 
@@ -65,24 +66,29 @@ void redraw_bar() {
     mvwaddstr(bar, 0, 0, "inspect v0.4.0 |");
     for (int i = 0; i < NBUFS; i++) {
         waddch(bar, ' ');
-        if (i == buf_idx) wattron(bar, COLOR_PAIR(SEL_PAIR));
-        else if (buffers[i] == NULL) wattron(bar, A_DIM);
+        if (i == buf_idx)
+            wattron(bar, COLOR_PAIR(SEL_PAIR));
+        else if (bufs[i] == NULL)
+            wattron(bar, A_DIM);
         wprintw(bar, "[%d]", (i + 1) % 10);
-        if (i == buf_idx) wattroff(bar, COLOR_PAIR(SEL_PAIR));
-        else if (buffers[i] == NULL) wattroff(bar, A_DIM);
+        if (i == buf_idx)
+            wattroff(bar, COLOR_PAIR(SEL_PAIR));
+        else if (bufs[i] == NULL)
+            wattroff(bar, A_DIM);
         wattron(bar, COLOR_PAIR(BAR_PAIR));
         waddch(bar, ' ');
     }
     wattroff(bar, A_BOLD | COLOR_PAIR(BAR_PAIR));
     wattron(bar, A_BOLD | COLOR_PAIR(FILE_PAIR));
-    mvwprintw(bar, 1, 0, buffers[buf_idx]->filename);
+    mvwprintw(bar, 1, 0, bufs[buf_idx]->filename);
     wattroff(bar, A_BOLD | COLOR_PAIR(FILE_PAIR));
-    wprintw(bar, " | %d:%d", row, col);
+    wprintw(bar, " | %d:%d", bufs[buf_idx]->row, bufs[buf_idx]->col);
     wrefresh(bar);
 }
 
-void redraw(int force) {
+void redraw(bool force) {
     if (force || redraw_display_needed) redraw_display();
     if (force || redraw_bar_needed) redraw_bar();
-    move(row - drow, col - dcol);
+    move(bufs[buf_idx]->row - bufs[buf_idx]->drow,
+         bufs[buf_idx]->col - bufs[buf_idx]->dcol);
 }

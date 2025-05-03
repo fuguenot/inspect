@@ -1,8 +1,6 @@
 #include "inspect.h"
 
 #include <stdlib.h>
-#include <string.h>
-#include <sys/stat.h>
 #include <unistd.h>
 
 #define USAGE_STR "usage: %s [-h] <file1> [file2] [file3]...\n"

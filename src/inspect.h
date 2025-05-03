@@ -1,5 +1,6 @@
 #pragma once
 
+#include <stdbool.h>
 #include <stdio.h>
 
 #define E_ALLOC 0x0001
@@ -17,17 +18,16 @@ extern const char *prog_name;
 struct buffer_t {
     char *filename;
     char **lines;
-    int64_t clines;
+    int64_t nlines;
+    int drow, dcol, row, col;
 };
-extern struct buffer_t *buffers[NBUFS];
+extern struct buffer_t *bufs[NBUFS];
 extern int buf_idx;
 
 extern int rows, cols;
 
-extern int redraw_display_needed, redraw_bar_needed;
-extern int running;
-
-extern int drow, dcol, row, col;
+extern bool redraw_display_needed, redraw_bar_needed;
+extern bool running;
 
 void usage(FILE *out);
 void help();
@@ -37,9 +37,9 @@ int open_buffer(const char *name);
 void close_buffer(int idx);
 void close_all_buffers();
 
-void init();
+void init_ui();
 void cleanup();
 
-void redraw(int force);
+void redraw(bool force);
 
 int handle_events();

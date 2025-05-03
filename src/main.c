@@ -4,17 +4,13 @@
 
 const char *prog_name;
 
-struct buffer_t *buffers[NBUFS];
+struct buffer_t *bufs[NBUFS];
 int buf_idx;
 
 int rows, cols;
 
-int redraw_display_needed, redraw_bar_needed;
-
-int running;
-
-int drow, dcol;
-int row, col;
+bool redraw_display_needed, redraw_bar_needed;
+bool running;
 
 int main(int argc, char *const *argv) {
     int idx = process_args(argc, argv);
@@ -25,7 +21,7 @@ int main(int argc, char *const *argv) {
             exit(1);
         }
     }
-    init();
+    init_ui();
     redraw(1);
     while (running) {
         redraw(0);
