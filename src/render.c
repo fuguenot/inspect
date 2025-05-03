@@ -8,6 +8,8 @@
 WINDOW *display;
 WINDOW *bar;
 
+#define BAR_SPACE 3
+
 #define BAR_PAIR 1
 #define SEL_PAIR 2
 #define FILE_PAIR 3
@@ -27,8 +29,8 @@ void init() {
 
     getmaxyx(stdscr, rows, cols);
 
-    display = newwin(rows - 3, cols, 0, 0);
-    bar = newwin(3, cols, rows - 3, 0);
+    display = newwin(rows - BAR_SPACE, cols, 0, 0);
+    bar = newwin(BAR_SPACE, cols, rows - BAR_SPACE, 0);
 
     running = TRUE;
     redraw_display_needed = FALSE;
@@ -60,11 +62,12 @@ void redraw_bar() {
     wclear(bar);
     wrefresh(bar);
     wattron(bar, A_BOLD | COLOR_PAIR(BAR_PAIR));
-    mvwaddstr(bar, 0, 0, "Buffer ");
+    mvwaddstr(bar, 0, 0, "inspect v0.4.0 |");
     for (int i = 0; i < NBUFS; i++) {
+        waddch(bar, ' ');
         if (i == buf_idx) wattron(bar, COLOR_PAIR(SEL_PAIR));
         else if (buffers[i] == NULL) wattron(bar, A_DIM);
-        wprintw(bar, "[%d]", i);
+        wprintw(bar, "[%d]", (i + 1) % 10);
         if (i == buf_idx) wattroff(bar, COLOR_PAIR(SEL_PAIR));
         else if (buffers[i] == NULL) wattroff(bar, A_DIM);
         wattron(bar, COLOR_PAIR(BAR_PAIR));
@@ -75,7 +78,6 @@ void redraw_bar() {
     mvwprintw(bar, 1, 0, buffers[buf_idx]->filename);
     wattroff(bar, A_BOLD | COLOR_PAIR(FILE_PAIR));
     wprintw(bar, " | %d:%d", row, col);
-    mvwaddstr(bar, 2, 0, "inspect v0.4.0 | ? for keybinds");
     wrefresh(bar);
 }
 

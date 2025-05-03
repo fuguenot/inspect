@@ -4,7 +4,7 @@
 
 const char *prog_name;
 
-struct buffer_t *buffers[10];
+struct buffer_t *buffers[NBUFS];
 int buf_idx;
 
 int rows, cols;

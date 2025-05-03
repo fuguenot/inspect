@@ -59,44 +59,16 @@ int handle_events() {
     case CTRL('f'): move_cursor(rows, 0); break;
     case CTRL('b'): move_cursor(-rows, 0); break;
     case '0':
-        if (buffers[0] != NULL) buf_idx = 0;
-        redraw_display_needed = TRUE;
+        if (buffers[NBUFS - 1] != NULL) {
+            buf_idx = NBUFS - 1;
+            redraw_display_needed = TRUE;
+        }
         break;
-    case '1':
-        if (buffers[1] != NULL) buf_idx = 1;
-        redraw_display_needed = TRUE;
-        break;
-    case '2':
-        if (buffers[2] != NULL) buf_idx = 2;
-        redraw_display_needed = TRUE;
-        break;
-    case '3':
-        if (buffers[3] != NULL) buf_idx = 3;
-        redraw_display_needed = TRUE;
-        break;
-    case '4':
-        if (buffers[4] != NULL) buf_idx = 4;
-        redraw_display_needed = TRUE;
-        break;
-    case '5':
-        if (buffers[5] != NULL) buf_idx = 5;
-        redraw_display_needed = TRUE;
-        break;
-    case '6':
-        if (buffers[6] != NULL) buf_idx = 6;
-        redraw_display_needed = TRUE;
-        break;
-    case '7':
-        if (buffers[7] != NULL) buf_idx = 7;
-        redraw_display_needed = TRUE;
-        break;
-    case '8':
-        if (buffers[8] != NULL) buf_idx = 8;
-        redraw_display_needed = TRUE;
-        break;
-    case '9':
-        if (buffers[9] != NULL) buf_idx = 9;
-        redraw_display_needed = TRUE;
+    case '1' ... '9':
+        if (buffers[c - '0' - 1] != NULL) {
+            buf_idx = c - '0' - 1;
+            redraw_display_needed = TRUE;
+        }
         break;
     case KEY_LEFT:
         for (int i = buf_idx - 1; i >= 0; i--) {
