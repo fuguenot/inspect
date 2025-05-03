@@ -19,12 +19,14 @@ int main(int argc, char *const *argv) {
     int idx = process_args(argc, argv);
     if (idx == RET_ERR) {
         print_errmsg();
+        free_errmsg();
         exit(1);
     }
     for (int i = idx; i < argc && buffer_count() < NBUFS; i++) {
         buf_idx = open_buffer(argv[i], false, NULL);
         if (buf_idx == RET_ERR) {
             print_errmsg();
+            free_errmsg();
             close_all_buffers();
             exit(1);
         }
@@ -39,6 +41,7 @@ int main(int argc, char *const *argv) {
             case E_FILE_NOT_FOUND: buf_idx = 0; break;
             default:
                 print_errmsg();
+                free_errmsg();
                 cleanup();
                 close_all_buffers();
                 exit(1);
@@ -50,4 +53,5 @@ int main(int argc, char *const *argv) {
     cleanup();
     close_all_buffers();
     free(help_path);
+    free_errmsg();
 }
