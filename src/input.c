@@ -50,7 +50,7 @@ int handle_events() {
         if (bufs[buf_idx] == NULL) running = false;
         break;
     case '?':
-        buf_idx = open_buffer("inspect-help");
+        buf_idx = open_buffer("inspect-help", true, help_path);
         if (buf_idx < 0) return buf_idx;
         redraw_display_needed = true;
         break;

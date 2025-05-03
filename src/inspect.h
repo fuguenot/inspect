@@ -13,6 +13,7 @@
 #define E_EVENT 0x0500
 
 extern const char *prog_name;
+extern char *help_path;
 
 #define NBUFS 10
 struct buffer_t {
@@ -33,7 +34,7 @@ void usage(FILE *out);
 void help();
 int process_args(int argc, char *const *argv);
 
-int open_buffer(const char *name);
+int open_buffer(const char *name, bool readonly, const char *path);
 void close_buffer(int idx);
 void close_all_buffers();
 

@@ -1,6 +1,7 @@
 #include "inspect.h"
 
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 
 #define USAGE_STR "usage: %s [-h] <file1> [file2] [file3]...\n"
@@ -20,6 +21,11 @@ void help() {
 
 int process_args(int argc, char *const *argv) {
     prog_name = argv[0];
+    const char *dir = getenv("INSPECT_DIR");
+    int64_t hpl = strlen(dir) + strlen("/help");
+    help_path = calloc(hpl + 1, sizeof(char));
+    strlcat(help_path, dir, hpl + 1);
+    strlcat(help_path, "/help", hpl + 1);
     int o;
     while ((o = getopt(argc, argv, "h")) != -1) {
         switch (o) {

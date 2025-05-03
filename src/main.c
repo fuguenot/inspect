@@ -3,6 +3,7 @@
 #include <stdlib.h>
 
 const char *prog_name;
+char *help_path;
 
 struct buffer_t *bufs[NBUFS];
 int buf_idx;
@@ -15,7 +16,7 @@ bool running;
 int main(int argc, char *const *argv) {
     int idx = process_args(argc, argv);
     for (int i = idx; i < argc; i++) {
-        buf_idx = open_buffer(argv[i]);
+        buf_idx = open_buffer(argv[i], false, NULL);
         if (buf_idx < 0) {
             close_all_buffers();
             exit(1);
@@ -34,4 +35,5 @@ int main(int argc, char *const *argv) {
 
     cleanup();
     close_all_buffers();
+    free(help_path);
 }

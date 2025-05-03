@@ -3,10 +3,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
+#include <unistd.h>
 
 #define FILENAME_MAX_SIZE 32
 
 int load_file(const char *name, struct buffer_t *buf) {
+    printf("load file %s\n", name);
     FILE *fp = fopen(name, "r");
     if (fp == NULL) return -(E_BUFFER | E_IO);
     struct stat fbuf;
@@ -54,14 +56,32 @@ int load_file(const char *name, struct buffer_t *buf) {
     return 0;
 }
 
-int open_buffer(const char *name) {
+int open_buffer(const char *name, bool readonly, const char *path) {
     int i = 0;
     for (; i < NBUFS; i++)
         if (bufs[i] == NULL) break;
     if (i == NBUFS) return -(E_BUFFER | E_FULL);
     bufs[i] = malloc(sizeof(struct buffer_t));
     if (bufs[i] == NULL) return -(E_BUFFER | E_ALLOC);
-    int r = load_file(name, bufs[i]);
+    int r = 1;
+    if (path != NULL) {
+        int64_t fpl = strlen(path) + strlen(name) + 1;
+        char *fullpath = calloc(fpl + 1, sizeof(char));
+        if (fullpath == NULL) {
+            free(bufs[i]);
+            return -(E_BUFFER | E_ALLOC);
+        }
+        strlcat(fullpath, path, fpl + 1);
+        strlcat(fullpath, "/", fpl + 1);
+        strlcat(fullpath, name, fpl + 1);
+        if (access(fullpath, F_OK) == 0) r = load_file(fullpath, bufs[i]);
+        free(fullpath);
+    }
+    if (r == 1 && access(name, F_OK) == 0) r = load_file(name, bufs[i]);
+    if (r == 1) {
+        free(bufs[i]);
+        return -(E_BUFFER | E_IO);
+    }
     bufs[i]->filename = calloc(strlen(name) + 1, sizeof(char));
     strlcpy(bufs[i]->filename, name, FILENAME_MAX_SIZE);
     bufs[i]->drow = 0;

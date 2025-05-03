@@ -9,3 +9,4 @@ add_executable(inspect-bin
 target_link_libraries(inspect-bin PRIVATE ${CURSES_LIBRARIES})
 set_target_properties(inspect-bin PROPERTIES OUTPUT_NAME inspect)
 install(TARGETS inspect-bin RUNTIME DESTINATION bin)
+install(DIRECTORY help/ DESTINATION help)
