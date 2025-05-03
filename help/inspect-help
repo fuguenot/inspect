@@ -9,3 +9,5 @@ KEYBINDS:
  q       Close buffer
  0-9     Go to the nth buffer
  ,     Go to the next open buffer on the left/right
+ X       Delete file
+ 󰌑       Clear error message
