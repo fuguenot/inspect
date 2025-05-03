@@ -36,20 +36,10 @@ int handle_events() {
     case 'Q': running = false; break;
     case 'q':
         close_buffer(buf_idx);
-        for (int i = buf_idx - 1; i >= 0; i--)
-            if (bufs[i] != NULL) {
-                buf_idx = i;
-                redraw_display_needed = true;
-                break;
-            }
-        if (bufs[buf_idx] == NULL)
-            for (int i = buf_idx + 1; i < NBUFS; i++)
-                if (bufs[i] != NULL) {
-                    buf_idx = i;
-                    redraw_display_needed = true;
-                    break;
-                }
-        if (bufs[buf_idx] == NULL) running = false;
+        if (find_next_buffer(true, true))
+            redraw_display_needed = true;
+        else
+            running = false;
         break;
     case '?':
         buf_idx = open_buffer("inspect-help", true, help_path);
@@ -77,22 +67,27 @@ int handle_events() {
         }
         break;
     case KEY_LEFT:
-        for (int i = buf_idx - 1; i >= 0; i--) {
-            if (bufs[i] != NULL) {
-                buf_idx = i;
-                redraw_display_needed = true;
-                break;
-            }
-        }
+        if (find_next_buffer(true, false)) redraw_display_needed = true;
         break;
     case KEY_RIGHT:
-        for (int i = buf_idx + 1; i < NBUFS; i++) {
-            if (bufs[i] != NULL) {
-                buf_idx = i;
-                redraw_display_needed = true;
-                break;
-            }
-        }
+        if (find_next_buffer(false, true)) redraw_display_needed = true;
+        break;
+    case 'X':
+        if (bufs[buf_idx]->readonly) {
+            error.code = E_READONLY;
+            return RET_ERR;
+        } else
+            remove(bufs[buf_idx]->filename);
+        close_buffer(buf_idx);
+        if (find_next_buffer(true, true))
+            redraw_display_needed = true;
+        else
+            running = false;
+        break;
+    case '\r':
+    case '\n':
+        error.code = E_OK;
+        error.details = NULL;
         break;
     default: break;
     }

@@ -6,6 +6,7 @@
 
 const char *prog_name;
 char *help_path;
+bool glob_readonly;
 
 struct buffer_t *bufs[NBUFS];
 int buf_idx;
@@ -23,7 +24,7 @@ int main(int argc, char *const *argv) {
         exit(1);
     }
     for (int i = idx; i < argc && buffer_count() < NBUFS; i++) {
-        buf_idx = open_buffer(argv[i], false, NULL);
+        buf_idx = open_buffer(argv[i], glob_readonly, NULL);
         if (buf_idx == RET_ERR) {
             print_errmsg();
             free_errmsg();
@@ -39,6 +40,7 @@ int main(int argc, char *const *argv) {
             switch (error.code) {
             case E_BUFS_FULL:
             case E_FILE_NOT_FOUND: buf_idx = 0; break;
+            case E_READONLY: break;
             default:
                 print_errmsg();
                 free_errmsg();

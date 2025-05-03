@@ -29,6 +29,7 @@ ERRMSG(E_BUFS_FULL, "no buffers available");
         ERRMSG_DETAILS(E_FILE_NOT_FOUND, "file not found: '%s'");
         ERRMSG_DETAILS(E_ALLOC_BUF_FILENAME, "failed to allocate space for the filename of buffer '%s'");
         ERRMSG_DETAILS(E_ALLOC_HELP_PATH, "failed to allocate space for the help path including '%s'");
+        ERRMSG(E_READONLY, "file is readonly");
     }
     return errmsg;
 }

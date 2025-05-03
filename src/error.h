@@ -23,6 +23,8 @@ enum error_type_e : uint8_t {
     E_ALLOC_BUF_FILENAME,
 
     E_ALLOC_HELP_PATH,
+
+    E_READONLY,
 };
 
 struct error_t {

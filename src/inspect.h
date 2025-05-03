@@ -14,6 +14,7 @@
 
 extern const char *prog_name;
 extern char *help_path;
+extern bool glob_readonly;
 
 #define NBUFS 10
 struct buffer_t {
@@ -21,6 +22,7 @@ struct buffer_t {
     char **lines;
     int64_t nlines;
     int drow, dcol, row, col;
+    bool readonly;
 };
 extern struct buffer_t *bufs[NBUFS];
 extern int buf_idx;
@@ -40,6 +42,7 @@ int open_buffer(const char *name, bool readonly, const char *path);
 void close_buffer(int idx);
 void close_all_buffers();
 int buffer_count();
+bool find_next_buffer(bool left, bool right);
 
 void init_ui();
 void cleanup();

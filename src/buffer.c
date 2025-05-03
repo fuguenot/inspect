@@ -67,6 +67,7 @@ int open_buffer(const char *name, bool readonly, const char *path) {
     bufs[i]->dcol = 0;
     bufs[i]->row = 0;
     bufs[i]->col = 0;
+    bufs[i]->readonly = readonly;
     return i;
 }
 
@@ -90,4 +91,23 @@ int buffer_count() {
     for (int i = 0; i < NBUFS; i++)
         if (bufs[i] != NULL) n++;
     return n;
+}
+
+bool find_next_buffer(bool left, bool right) {
+    bool found = false;
+    if (left)
+        for (int i = buf_idx - 1; i >= 0; i--)
+            if (bufs[i] != NULL) {
+                buf_idx = i;
+                found = true;
+                break;
+            }
+    if (!found && right)
+        for (int i = buf_idx + 1; i < NBUFS; i++)
+            if (bufs[i] != NULL) {
+                buf_idx = i;
+                found = true;
+                break;
+            }
+    return found;
 }
