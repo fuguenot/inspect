@@ -4,6 +4,8 @@
 
 #include <ncurses.h>
 
+#include "error.h"
+
 #define CTRL(key) ((key) & 0x1f)
 
 int clamp(int n, int min, int max) {
@@ -51,7 +53,7 @@ int handle_events() {
         break;
     case '?':
         buf_idx = open_buffer("inspect-help", true, help_path);
-        if (buf_idx < 0) return buf_idx;
+        if (buf_idx == RET_ERR) return RET_ERR;
         redraw_display_needed = true;
         break;
     case 'h': move_cursor(0, -1); break;

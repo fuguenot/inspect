@@ -5,14 +5,19 @@
 
 #include <ncurses.h>
 
+#include "error.h"
+
 WINDOW *display;
 WINDOW *bar;
 
 #define BAR_SPACE 3
 
-#define BAR_PAIR  1
-#define SEL_PAIR  2
-#define FILE_PAIR 3
+enum color_pair_e : int16_t {
+    BAR_PAIR = 1,
+    SEL_PAIR,
+    FILE_PAIR,
+    ERR_PAIR
+};
 
 void init_ui() {
     setlocale(LC_ALL, "");
@@ -27,6 +32,7 @@ void init_ui() {
         init_pair(BAR_PAIR, COLOR_WHITE, COLOR_BLACK);
         init_pair(SEL_PAIR, COLOR_GREEN, COLOR_BLACK);
         init_pair(FILE_PAIR, COLOR_BLUE, COLOR_BLACK);
+        init_pair(ERR_PAIR, COLOR_WHITE, COLOR_RED);
     }
 
     getmaxyx(stdscr, rows, cols);
@@ -83,6 +89,11 @@ void redraw_bar() {
     mvwprintw(bar, 1, 0, bufs[buf_idx]->filename);
     wattroff(bar, A_BOLD | COLOR_PAIR(FILE_PAIR));
     wprintw(bar, " | %d:%d", bufs[buf_idx]->row, bufs[buf_idx]->col);
+    if (error.code != E_OK) {
+        wattron(bar, COLOR_PAIR(ERR_PAIR));
+        mvwprintw(bar, 2, 0, "%s", get_errmsg());
+        wattroff(bar, COLOR_PAIR(ERR_PAIR));
+    }
     wrefresh(bar);
 }
 

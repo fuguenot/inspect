@@ -4,6 +4,8 @@
 #include <string.h>
 #include <unistd.h>
 
+#include "error.h"
+
 #define USAGE_STR "usage: %s [-h] <file1> [file2] [file3]...\n"
 #define HELP_STR                                  \
     "inspect: simple tool for looking at files\n" \
@@ -24,6 +26,11 @@ int process_args(int argc, char *const *argv) {
     const char *dir = getenv("INSPECT_DIR");
     int64_t hpl = strlen(dir) + strlen("/help");
     help_path = calloc(hpl + 1, sizeof(char));
+    if (help_path == NULL) {
+        error.code = E_ALLOC_HELP_PATH;
+        error.details = dir;
+        return RET_ERR;
+    }
     strlcat(help_path, dir, hpl + 1);
     strlcat(help_path, "/help", hpl + 1);
     int o;

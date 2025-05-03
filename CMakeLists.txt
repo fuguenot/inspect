@@ -5,6 +5,8 @@ add_executable(inspect-bin
     "src/main.c" "src/inspect.h"
     "src/args.c" "src/render.c"
     "src/input.c" "src/buffer.c"
+    "src/file.c" "src/error.h"
+    "src/error.c"
 )
 target_link_libraries(inspect-bin PRIVATE ${CURSES_LIBRARIES})
 set_target_properties(inspect-bin PROPERTIES OUTPUT_NAME inspect)

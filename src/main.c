@@ -2,6 +2,8 @@
 
 #include <stdlib.h>
 
+#include "error.h"
+
 const char *prog_name;
 char *help_path;
 
@@ -15,9 +17,14 @@ bool running;
 
 int main(int argc, char *const *argv) {
     int idx = process_args(argc, argv);
-    for (int i = idx; i < argc; i++) {
+    if (idx == RET_ERR) {
+        print_errmsg();
+        exit(1);
+    }
+    for (int i = idx; i < argc && buffer_count() < NBUFS; i++) {
         buf_idx = open_buffer(argv[i], false, NULL);
-        if (buf_idx < 0) {
+        if (buf_idx == RET_ERR) {
+            print_errmsg();
             close_all_buffers();
             exit(1);
         }
@@ -26,10 +33,17 @@ int main(int argc, char *const *argv) {
     redraw(1);
     while (running) {
         redraw(0);
-        if (handle_events() < 0) {
-            cleanup();
-            close_all_buffers();
-            exit(1);
+        if (handle_events() == RET_ERR) {
+            switch (error.code) {
+            case E_BUFS_FULL:
+            case E_FILE_NOT_FOUND: buf_idx = 0; break;
+            default:
+                print_errmsg();
+                cleanup();
+                close_all_buffers();
+                exit(1);
+                break;
+            }
         }
     }
 

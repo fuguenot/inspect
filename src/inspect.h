@@ -34,9 +34,12 @@ void usage(FILE *out);
 void help();
 int process_args(int argc, char *const *argv);
 
+int load_file(const char *name, struct buffer_t *buf);
+
 int open_buffer(const char *name, bool readonly, const char *path);
 void close_buffer(int idx);
 void close_all_buffers();
+int buffer_count();
 
 void init_ui();
 void cleanup();
