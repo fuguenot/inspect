@@ -3,14 +3,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-#define E_ALLOC 0x0001
-#define E_IO 0x0002
-#define E_FULL 0x0003
-#define E_BUFFER 0x0100
-#define E_ARGS 0x0200
-#define E_RENDER 0x0300
-#define E_INIT 0x0400
-#define E_EVENT 0x0500
+#define INSPECT_VERSION "1.0.0"
 
 extern const char *prog_name;
 extern char *help_path;

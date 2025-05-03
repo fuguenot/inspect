@@ -34,11 +34,15 @@ int process_args(int argc, char *const *argv) {
     strlcat(help_path, dir, hpl + 1);
     strlcat(help_path, "/help", hpl + 1);
     int o;
-    while ((o = getopt(argc, argv, "hR")) != -1) {
+    while ((o = getopt(argc, argv, "hRV")) != -1) {
         switch (o) {
         case 'h':
             usage(stdout);
             help();
+            exit(0);
+            break;
+        case 'V':
+            printf("%s\n", INSPECT_VERSION);
             exit(0);
             break;
         case 'R':

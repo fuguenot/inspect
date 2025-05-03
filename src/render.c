@@ -69,7 +69,7 @@ void redraw_bar() {
     wclear(bar);
     wrefresh(bar);
     wattron(bar, A_BOLD | COLOR_PAIR(BAR_PAIR));
-    mvwaddstr(bar, 0, 0, "inspect v0.4.0 |");
+    mvwprintw(bar, 0, 0, "inspect v%s |", INSPECT_VERSION);
     for (int i = 0; i < NBUFS; i++) {
         waddch(bar, ' ');
         if (i == buf_idx)
