@@ -41,5 +41,6 @@ void init_ui();
 void cleanup();
 
 void redraw(bool force);
+void resize();
 
 int handle_events();

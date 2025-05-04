@@ -89,6 +89,9 @@ int handle_events() {
         error.code = E_OK;
         error.details = NULL;
         break;
+    case KEY_RESIZE:
+        resize();
+        break;
     default: break;
     }
     return 0;

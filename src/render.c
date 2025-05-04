@@ -12,12 +12,7 @@ WINDOW *bar;
 
 #define BAR_SPACE 3
 
-enum color_pair_e : int16_t {
-    BAR_PAIR = 1,
-    SEL_PAIR,
-    FILE_PAIR,
-    ERR_PAIR
-};
+enum color_pair_e : int16_t { BAR_PAIR = 1, SEL_PAIR, FILE_PAIR, ERR_PAIR };
 
 void init_ui() {
     setlocale(LC_ALL, "");
@@ -55,7 +50,6 @@ void cleanup() {
 
 void redraw_display() {
     wclear(display);
-    wrefresh(display);
     for (int i = 0; i < rows; i++)
         if (i + bufs[buf_idx]->drow < bufs[buf_idx]->nlines)
             mvwaddstr(display,
@@ -67,7 +61,6 @@ void redraw_display() {
 
 void redraw_bar() {
     wclear(bar);
-    wrefresh(bar);
     wattron(bar, A_BOLD | COLOR_PAIR(BAR_PAIR));
     mvwprintw(bar, 0, 0, "inspect v%s |", INSPECT_VERSION);
     for (int i = 0; i < NBUFS; i++) {
@@ -102,4 +95,13 @@ void redraw(bool force) {
     if (force || redraw_bar_needed) redraw_bar();
     move(bufs[buf_idx]->row - bufs[buf_idx]->drow,
          bufs[buf_idx]->col - bufs[buf_idx]->dcol);
+}
+
+void resize() {
+    refresh();
+    getmaxyx(stdscr, rows, cols);
+    wresize(display, rows - BAR_SPACE, cols);
+    wresize(bar, BAR_SPACE, cols);
+    mvwin(bar, rows - BAR_SPACE, cols);
+    redraw(true);
 }
